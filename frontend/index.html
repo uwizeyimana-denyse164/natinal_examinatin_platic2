@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRMS - Sales Record Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- LOGIN PAGE -->
+    <div id="loginPage" class="page active">
+        <div class="login-wrapper">
+            <div class="login-box">
+                <div class="logo"></div>
+                <h2>SRMS</h2>
+                <p>Sales Record Management System</p>
+                <input type="text" id="loginUser" placeholder="Username" autocomplete="username">
+                <input type="password" id="loginPass" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter') login()">
+                <button onclick="login()">Login</button>
+                <p id="loginError" class="error"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="page">
+        <nav>
+                <h2>SRMS Dashboard</h2>
+            <div class="nav-right">
+                <span id="userDisplay"></span>
+                <button onclick="logout()">Logout</button>
+            </div>
+        </nav>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('items', event)">Items</button>
+            <button class="tab" onclick="showTab('sales', event)">Sales</button>
+            <button class="tab" onclick="showTab('saleDetails', event)">Sale Details</button>
+            <button class="tab" onclick="showTab('reports', event)">Reports</button>
+        </div>
+
+        <!-- ITEMS TAB -->
+        <div id="itemsTab" class="tab-content active">
+            <h3>Manage Items</h3>
+            <div class="form-card">
+                <form id="itemForm">
+                    <input type="hidden" id="itemId">
+                    <input type="text" id="itemName" placeholder="Item Name" required>
+                    <input type="text" id="Specification" placeholder="Specification">
+                    <input type="text" id="unitMeasure" placeholder="Unit Measure">
+                    <input type="number" id="Quantity" placeholder="Quantity" min="0">
+                    <input type="number" step="0.01" id="unitPrice" placeholder="Unit Price" min="0">
+                    <input type="number" id="TotalQuantity" placeholder="Total Quantity" min="0">
+                    <button type="submit" id="itemSubmitBtn">Save Item</button>
+                </form>
+            </div>
+            <div class="table-card">
+                <div class="table-actions">
+                    <button class="btn-print" onclick="printTable('itemsTable')">Print</button>
+                </div>
+                <table id="itemsTable">
+                    <thead>
+                        <tr><th>Name</th><th>Specification</th><th>Unit</th><th>Quantity</th><th>Unit Price</th><th>Total Qty</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SALES TAB -->
+        <div id="salesTab" class="tab-content">
+            <h3>Manage Sales</h3>
+            <div class="form-card">
+                <form id="saleForm">
+                    <input type="hidden" id="saleId">
+                    <input type="date" id="SaleDate" required>
+                    <input type="text" id="CustomerName" placeholder="Customer Name" required>
+                    <input type="number" step="0.01" id="TotalPrice" placeholder="Total Price" min="0">
+                    <button type="submit" id="saleSubmitBtn">Save Sale</button>
+                </form>
+            </div>
+            <div class="table-card">
+                <div class="table-actions">
+                    <button class="btn-print" onclick="printTable('salesTable')">Print</button>
+                </div>
+                <table id="salesTable">
+                    <thead>
+                        <tr><th>Date</th><th>Customer Name</th><th>Total Price</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SALE DETAILS TAB -->
+        <div id="saleDetailsTab" class="tab-content">
+            <h3>Manage Sale Details</h3>
+            <div class="form-card">
+                <form id="saleDetailForm">
+                    <input type="hidden" id="sdId">
+                    <select id="sdSaleID" required><option value="">Select Sale</option></select>
+                    <select id="sdItemID" required><option value="">Select Item</option></select>
+                    <input type="number" id="QuantitySold" placeholder="Quantity Sold" min="1" required>
+                    <input type="number" step="0.01" id="SubTotalPrice" placeholder="Sub Total (auto)" min="0" readonly style="background:#f5f5f5;">
+                    <button type="submit">Save Detail</button>
+                </form>
+            </div>
+            <div class="table-card">
+                <div class="table-actions">
+                    <button class="btn-print" onclick="printTable('saleDetailsTable')">Print</button>
+                </div>
+                <table id="saleDetailsTable">
+                    <thead>
+                        <tr><th>Sale ID</th><th>Item</th><th>Qty Sold</th><th>Sub Total</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- REPORTS TAB -->
+        <div id="reportsTab" class="tab-content">
+            <h3>Reports</h3>
+            <div class="report-tabs">
+                <button class="report-tab active" onclick="showReportTab('inventory', event)">Inventory Report</button>
+                <button class="report-tab" onclick="showReportTab('sales', event)">Sales Report</button>
+                <button class="report-tab" onclick="showReportTab('saleDetails', event)">Sales Details Report</button>
+            </div>
+
+            <div id="inventoryReport" class="report-content active">
+                <div class="report-actions">
+                    <button class="btn-export" onclick="exportReport('inventory', 'inventory_report.csv')">Export CSV</button>
+                    <button class="btn-print" onclick="printReport('inventory')">Print</button>
+                </div>
+                <div class="table-card">
+                    <table id="inventoryReportTable">
+                        <thead>
+                            <tr><th>Name</th><th>Specification</th><th>Unit</th><th>Quantity</th><th>Unit Price</th><th>Total Qty</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="salesReport" class="report-content">
+                <div class="report-actions">
+                    <button class="btn-export" onclick="exportReport('sales', 'sales_report.csv')">Export CSV</button>
+                    <button class="btn-print" onclick="printReport('sales')">Print</button>
+                </div>
+                <div class="table-card">
+                    <table id="salesReportTable">
+                        <thead>
+                            <tr><th>Date</th><th>Customer Name</th><th>Total Price</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="saleDetailsReport" class="report-content">
+                <div class="report-actions">
+                    <button class="btn-export" onclick="exportReport('saleDetails', 'sale_details_report.csv')">Export CSV</button>
+                    <button class="btn-print" onclick="printReport('saleDetails')">Print</button>
+                </div>
+                <div class="table-card">
+                    <table id="saleDetailsReportTable">
+                        <thead>
+                            <tr><th>Sale ID</th><th>Date</th><th>Customer</th><th>Item</th><th>Qty Sold</th><th>Sub Total</th></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

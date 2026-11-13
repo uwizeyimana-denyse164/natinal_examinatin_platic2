@@ -1,0 +1,9 @@
+{
+  "name": "srms-frontend",
+  "version": "1.0.0",
+  "description": "Sales Record Management System - Frontend",
+  "main": "app.js",
+  "scripts": {
+    "start": "start index.html"
+  }
+}

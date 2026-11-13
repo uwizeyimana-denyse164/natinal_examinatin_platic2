@@ -1,0 +1,16 @@
+{
+  "name": "srms",
+  "version": "1.0.0",
+  "description": "Sales Record Management System",
+  "scripts": {
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm start",
+    "install:all": "cd backend && npm install && cd ../frontend && npm install",
+    "start": "concurrently \"npm run backend\" \"npm run frontend\""
+  },
+  "author": "ABIZERIMANA Divine",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}
